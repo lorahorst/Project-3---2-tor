@@ -6,11 +6,11 @@ const homeworkSchema = new Schema({
         type: String,
         required: true,
     },
-     author: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: "User",
-        required: true,
-      },
+    user: {
+      type: mongoose.SchemaTypes.ObjectId,
+      required: true,
+      ref: "User"
+    },
       solutions: {
         type: [mongoose.SchemaTypes.ObjectId],
         default: [],
