@@ -16,6 +16,11 @@ const homeworkSchema = new Schema({
         default: [],
         ref: "Solution",
       },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+        immutable: true,
+      },
 });
 
 const Homework = model("Homework", homeworkSchema);

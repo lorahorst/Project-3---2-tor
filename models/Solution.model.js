@@ -11,6 +11,11 @@ const solutionSchema = new Schema({
         ref: "User",
         required: true,
       },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        immutable: true,
+      },
 });
 
 const Solution = model("Solution", solutionSchema);
