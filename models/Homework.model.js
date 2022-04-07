@@ -7,7 +7,7 @@ const homeworkSchema = new Schema({
         required: true,
     },
     user: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: [mongoose.SchemaTypes.ObjectId],
       required: true,
       ref: "User"
     },

@@ -1,13 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Homework = require("../models/Homework.model");
+const { authenticate } = require("../middlewares/jwt.middleware")
 
 const router = express.Router();
 
 
 // create homework
 
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   const { content } = req.body;
   const homework = await Homework.create({ content, user: req.jwtPayload.user._id });
   res.status(200).json(homework);
@@ -18,7 +19,7 @@ router.post("/", async (req, res) => {
 
 // get all homework
 
-router.get("/", async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   const homeworks = await Homework.find().populate("user");
   res.status(200).json(homeworks);
 });
@@ -28,7 +29,7 @@ router.get("/", async (req, res) => {
 
 // get all homework from a certain user
 
-router.get("/owned", async (req, res) => {
+router.get("/owned", authenticate, async (req, res) => {
   // find homework associated with a user
   const homework = await Homework.find({
     user: req.jwtPayload.user._id,
@@ -41,7 +42,7 @@ router.get("/owned", async (req, res) => {
 
 // get one homework by id
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
   const { id } = req.params;
   const homework = await Homework.findById(id);
   res.status(200).json(homework);
@@ -52,7 +53,7 @@ router.get("/:id", async (req, res) => {
 
 // delete homework by id
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   const { id } = req.params;
   const homework = await Homework.findById(id);
   if (homework.user.toString() === req.jwtPayload.user._id) {
@@ -68,7 +69,7 @@ router.delete("/:id", async (req, res) => {
 
 // edit homework by id
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticate, async (req, res) => {
   const { id } = req.params;
   const { content } = req.body;
   let homework = await Homework.findById(id);

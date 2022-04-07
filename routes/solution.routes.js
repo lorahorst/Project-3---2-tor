@@ -1,13 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Solution = require("../models/Solution.model");
+const { authenticate } = require("../middlewares/jwt.middleware")
 
 const router = express.Router();
 
 
 // create solution
 
-router.post("/", async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
     const { content } = req.body;
     const solution = await Solution.create({ content, user: req.jwtPayload.user._id });
     res.status(200).json(solution);
@@ -18,7 +19,7 @@ router.post("/", async (req, res) => {
   
   // get all solutions
   
-  router.get("/", async (req, res) => {
+  router.get("/", authenticate, async (req, res) => {
     const solutions = await Solution.find().populate("user");
     res.status(200).json(solutions);
   });
@@ -28,7 +29,7 @@ router.post("/", async (req, res) => {
   
   // get all solutions from a certain user
   
-  router.get("/owned", async (req, res) => {
+  router.get("/owned", authenticate, async (req, res) => {
     // find homework associated with a user
     const solution = await Solution.find({
       user: req.jwtPayload.user._id,
@@ -41,7 +42,7 @@ router.post("/", async (req, res) => {
   
   // get one solution by id
   
-  router.get("/:id", async (req, res) => {
+  router.get("/:id", authenticate, async (req, res) => {
     const { id } = req.params;
     const solution = await Solution.findById(id);
     res.status(200).json(solution);
@@ -52,7 +53,7 @@ router.post("/", async (req, res) => {
   
   // delete solution by id
   
-  router.delete("/:id", async (req, res) => {
+  router.delete("/:id", authenticate, async (req, res) => {
     const { id } = req.params;
     const solution = await Solution.findById(id);
     if (solution.user.toString() === req.jwtPayload.user._id) {
@@ -68,7 +69,7 @@ router.post("/", async (req, res) => {
   
   // edit solution by id
   
-  router.put("/:id", async (req, res) => {
+  router.put("/:id", authenticate, async (req, res) => {
     const { id } = req.params;
     const { content } = req.body;
     let solution = await Solution.findById(id);
