@@ -7,7 +7,7 @@ const solutionSchema = new Schema({
         required: true,
     },
     user: {
-        type: [mongoose.SchemaTypes.ObjectId],
+        type: mongoose.SchemaTypes.ObjectId,
         ref: "User",
         required: true,
       },
