@@ -15,15 +15,12 @@ router.post("/", authenticate, async (req, res) => {
 });
 
 
-
-
 // get all homework
 
 router.get("/", authenticate, async (req, res) => {
   const homeworks = await Homework.find().populate("user");
   res.status(200).json(homeworks);
 });
-
 
 
 
@@ -38,8 +35,6 @@ router.get("/owned", authenticate, async (req, res) => {
 });
 
 
-
-
 // get one homework by id
 
 router.get("/:id", authenticate, async (req, res) => {
@@ -47,8 +42,6 @@ router.get("/:id", authenticate, async (req, res) => {
   const homework = await Homework.findById(id);
   res.status(200).json(homework);
 });
-
-
 
 
 // delete homework by id
@@ -63,7 +56,6 @@ router.delete("/:id", authenticate, async (req, res) => {
     res.status(400).json("unauthorized");
   }
 });
-
 
 
 

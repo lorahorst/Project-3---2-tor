@@ -15,16 +15,12 @@ router.post("/", authenticate, async (req, res) => {
   });
   
   
-  
-  
   // get all solutions
   
   router.get("/", authenticate, async (req, res) => {
     const solutions = await Solution.find().populate("user");
     res.status(200).json(solutions);
   });
-  
-  
   
   
   // get all solutions from a certain user
@@ -39,7 +35,6 @@ router.post("/", authenticate, async (req, res) => {
   
   
   
-  
   // get one solution by id
   
   router.get("/:id", authenticate, async (req, res) => {
@@ -47,7 +42,6 @@ router.post("/", authenticate, async (req, res) => {
     const solution = await Solution.findById(id);
     res.status(200).json(solution);
   });
-  
   
   
   
