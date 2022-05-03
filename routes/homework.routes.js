@@ -9,8 +9,9 @@ const router = express.Router();
 // create homework
 
 router.post("/", authenticate, async (req, res) => {
+  const { title } = req.body;
   const { content } = req.body;
-  const homework = await Homework.create({ content, user: req.jwtPayload.user._id });
+  const homework = await Homework.create({ title, content, user: req.jwtPayload.user._id });
   res.status(200).json(homework);
 });
 

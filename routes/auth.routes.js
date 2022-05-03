@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
+const {authenticate} = require("../middlewares/jwt.middleware")
 
 const router = express.Router();
 
@@ -14,7 +15,6 @@ router.post("/signup", async (req, res) => {
       lastName,
       email,
       password: passwordHash,
-      role,
     });
     res.status(200).json(user);
   } catch (error) {
@@ -49,6 +49,10 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
+});
+
+router.get("/verify", authenticate, (req, res) => {
+  res.status(200).json(req.jwtPayload.user);
 });
 
 module.exports = router;
