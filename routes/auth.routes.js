@@ -7,7 +7,7 @@ const {authenticate} = require("../middlewares/jwt.middleware")
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, password, role } = req.body;
+  const { firstName, lastName, email, password } = req.body;
   try {
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await User.create({
