@@ -40,7 +40,7 @@ router.get("/owned", authenticate, async (req, res) => {
 
 router.get("/:id", authenticate, async (req, res) => {
   const { id } = req.params;
-  const homework = await Homework.findById(id);
+  const homework = await Homework.findById(id).populate("solution").populate("user");
   res.status(200).json(homework);
 });
 
@@ -64,9 +64,10 @@ router.delete("/:id", authenticate, async (req, res) => {
 
 router.put("/:id", authenticate, async (req, res) => {
   const { id } = req.params;
-  const { content } = req.body;
+  const { title, content } = req.body;
   let homework = await Homework.findById(id);
   if (homework.user.toString() === req.jwtPayload.user._id) {
+    homework.title = title;
     homework.content = content;
     homework = await homework.save();
     res.status(200).json(homework);

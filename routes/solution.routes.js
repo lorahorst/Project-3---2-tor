@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const Homework = require("../models/Homework.model")
 const Solution = require("../models/Solution.model");
 const { authenticate } = require("../middlewares/jwt.middleware")
 
@@ -8,41 +9,15 @@ const router = express.Router();
 
 // create solution
 
-router.post("/", authenticate, async (req, res) => {
-    const { content } = req.body;
-    const solution = await Solution.create({ content, user: req.jwtPayload.user._id });
+router.post("/:id", authenticate, async (req, res) => {
+    const { solutionContent } = req.body;
+    const homework = await Homework.findById(req.params.id);
+    const solution = await Solution.create({ solutionContent, user: req.jwtPayload.user._id });
+    await solution.save();
+    homework.solutions.push(solution.id)
+    await homework.save();
     res.status(200).json(solution);
   });
-  
-  
-  // get all solutions
-  
-  router.get("/", authenticate, async (req, res) => {
-    const solutions = await Solution.find().populate("user");
-    res.status(200).json(solutions);
-  });
-  
-  
-  // get all solutions from a certain user
-  
-  router.get("/owned", authenticate, async (req, res) => {
-    // find homework associated with a user
-    const solution = await Solution.find({
-      user: req.jwtPayload.user._id,
-    }).populate("user");
-    res.status(200).json(solution);
-  });
-  
-  
-  
-  // get one solution by id
-  
-  router.get("/:id", authenticate, async (req, res) => {
-    const { id } = req.params;
-    const solution = await Solution.findById(id);
-    res.status(200).json(solution);
-  });
-  
   
   
   // delete solution by id
@@ -59,16 +34,14 @@ router.post("/", authenticate, async (req, res) => {
   });
   
   
-  
-  
   // edit solution by id
   
   router.put("/:id", authenticate, async (req, res) => {
     const { id } = req.params;
-    const { content } = req.body;
+    const { solutionContent } = req.body;
     let solution = await Solution.findById(id);
     if (solution.user.toString() === req.jwtPayload.user._id) {
-        solution.content = content;
+        solution.solutionContent = solutionContent;
         solution = await solution.save();
       res.status(200).json(solution);
     } else {

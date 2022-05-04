@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
 const solutionSchema = new Schema({
-    content: {
+    solutionContent: {
         type: String,
         required: true,
     },
