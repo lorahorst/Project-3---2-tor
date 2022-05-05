@@ -40,7 +40,7 @@ router.get("/owned", authenticate, async (req, res) => {
 
 router.get("/:id", authenticate, async (req, res) => {
   const { id } = req.params;
-  const homework = await Homework.findById(id).populate("solution").populate("user");
+  const homework = await Homework.findById(id).populate("solutions").populate("user");
   res.status(200).json(homework);
 });
 
